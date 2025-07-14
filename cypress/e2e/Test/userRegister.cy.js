@@ -2,31 +2,30 @@
 
 
 context('Register', () => {
-  
 
   it('Basarili kullanici olusturma', () => {
-    cy.visit('https://parabank.parasoft.com/parabank/index.htm'); //urle gider
+    cy.visit('https://automationexercise.com/');
 
-    cy.get('[href*="register.htm"]').click(); //register'a tıklar //*= -->
-
-    //form doldurulur
-    cy.get('[id="customer.firstName"]').type('testUser');
-    cy.get('[id="customer.lastName"]').type('test');
-    cy.get('[id="customer.address.street"]').type('user');
-    cy.get('[id="customer.address.city"]').type('xx');
-    cy.get('[id="customer.address.state"]').type('yy');
-    cy.get('[id="customer.address.zipCode"]').type('nb');
-    cy.get('[id="customer.phoneNumber"]').type('abc');
-    cy.get('[id="customer.ssn"]').type('testUser');
-    cy.get('[id="customer.username"]').type('testUser9');
-    cy.get('[id="customer.password"]').type('testUser');
-    cy.get('[id="repeatedPassword"]').type('testUser');
-
-    //register butonuna tıklar.
-    cy.get('[value="Register"]').click();
-
-    //başarılı şekilde register olduğunu kontrol eder.
-    cy.get('[id="leftPanel"] p').should('have.text','Welcome testUser test');
-  })
-  
-})
+    cy.get('a[href="/login"]').click();
+    cy.get('[data-qa="signup-name"]').type('Burçak');
+    const email = `burcak${Date.now()}@mail.com`;
+    cy.get('[data-qa="signup-email"]').type(email);
+    cy.get('[data-qa="signup-button"]').click();
+    cy.contains('Enter Account Information').should('be.visible');
+    cy.get('#id_gender2').check();
+    cy.get('#password').type('Burcak123!');
+    cy.get('#days').select('17');
+    cy.get('#months').select('April');
+    cy.get('#years').select('2000');
+    cy.get('#first_name').type('Burçak');
+    cy.get('#last_name').type('Çelebi');
+    cy.get('#company').type('Cypress Co.');
+    cy.get('#address1').type('Test No:1');
+    cy.get('#state').type('Ankara');
+    cy.get('#city').type('Çankaya');
+    cy.get('#zipcode').type('06000');
+    cy.get('#mobile_number').type('05551234567');
+    cy.get('[data-qa="create-account"]').click();
+    cy.contains('Account Created!').should('be.visible');
+  });
+});
