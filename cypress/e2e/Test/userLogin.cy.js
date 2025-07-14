@@ -1,41 +1,50 @@
 /// <reference types="cypress" />
 
+import BaseLibrary from "../base/BaseLibrary";
+import HomePage from "../pages/Homepage";
+import LoginPage from "../pages/LoginPage";
 
-context('Login Testleri', () => {
+context('Test', () => {
 
-  it('Basarili kullanici girisi', () => {
+  const baseLibrary = new BaseLibrary();
+  const loginPage = new LoginPage();
+  const homePage = new HomePage();
+
+  it('Basarili Kullanici Girişi Senaryosu', () => {
     cy.visit('https://automationexercise.com/login');
-
-    cy.get('[data-qa="login-email"]').type('testcypress@example.com');
-    cy.get('[data-qa="login-password"]').type('123456');
-    cy.get('[data-qa="login-button"]').click();
-
-    cy.contains('Logged in as').should('be.visible');
-  })
-
-  it('Basarisiz kullanici girisi', () => {
-    cy.visit('https://automationexercise.com/login');
-
-    cy.get('[data-qa="login-email"]').type('testcypress@example.com');
-    cy.get('[data-qa="login-password"]').type('yanlisSifre');
-    cy.get('[data-qa="login-button"]').click();
-
-    cy.contains('Your email or password is incorrect!').should('be.visible');
-  })
-
-  it('Zorunlu kullanici girisi', () => {
-    cy.visit('https://automationexercise.com/login');
-
-    cy.get('[data-qa="signup-button"]').click();
-    cy.url().should('include', '/login');
-    cy.get('[data-qa="signup-name"]').type('Burçak');
-    cy.get('[data-qa="signup-button"]').click();
-    cy.url().should('include', '/login');
-    const email = `burcak${Date.now()}@mail.com`;
-    cy.get('[data-qa="signup-email"]').type(email);
-    cy.get('[data-qa="signup-button"]').click();
-
-    cy.contains('Enter Account Information').should('be.visible');
+    loginPage.enterEmail('testcypress@example.com');
+    loginPage.enterPassword('123456');
+    loginPage.clickLogin();
+    homePage.verifyLoggedInAsUser('Burçak');
+    cy.url().should('eq', 'https://automationexercise.com/');
   });
 
-});
+  it('Geçersiz Şifre ile Basarisiz Kullanici Girişi Senaryosu', () => {
+    cy.visit('https://automationexercise.com/login');
+    loginPage.enterEmail('testcypress@example.com');
+    loginPage.enterPassword('yanlisSifre');
+    loginPage.clickLogin();
+  });
+
+  it('Basarisiz Kullanici Girisi ', () => {
+
+    cy.visit('https://automationexercise.com/login');
+    loginPage.clickLogin();
+  });
+
+  it('Kaydolma Zorunlu', () => {
+
+    cy.visit('https://automationexercise.com/login');
+    loginPage.clickSignupButton();
+    cy.url().should('include', '/login');
+    loginPage.enterSignupName('Yeni Kullanıcı');
+    loginPage.clickSignupButton();
+    cy.url().should('include', '/login');
+    const uniqueEmail = `yeni.kullanici.${Date.now()}@mail.com`;
+    loginPage.enterSignupEmail(uniqueEmail);
+    loginPage.clickSignupButton();
+    cy.contains('Enter Account Information').should('be.visible');
+    cy.url().should('include', '/signup');
+  });
+
+})

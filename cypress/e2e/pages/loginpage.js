@@ -1,19 +1,47 @@
-class loginpage {
+// cypress/e2e/pages/LoginPage.js
 
-    sendkeysUsername(value){
-        cy.get('[name="email"]').type(value);
-        return this;
-    }
+class LoginPage {
+  enterEmail(email) {
+    cy.get('input[data-qa="login-email"]')
+      .should('be.visible')
+      .and('not.be.disabled')
+      .clear()
+      .type(email);
+  }
 
-    sendkeysPassword(value){
-        cy.get('[name="password"]').type(value);
-        return this;
-    }
+  enterPassword(password) {
+    cy.get('input[data-qa="login-password"]')
+      .should('be.visible')
+      .and('not.be.disabled')
+      .clear()
+      .type(password);
+  }
 
-    clicklogin(){
-        cy.get('[value="Log In"]').click();
-        return this;
-    }
+  clickLogin() {
+    cy.get('button[data-qa="login-button"]')
+      .should('be.visible')
+      .click();
+  }
+
+  clickSignupButton() {
+    cy.get('button[data-qa="signup-button"]')
+      .should('be.visible')
+      .click();
+  }
+
+  enterSignupName(name) {
+    cy.get('input[data-qa="signup-name"]')
+      .should('be.visible')
+      .clear()
+      .type(name);
+  }
+
+  enterSignupEmail(email) {
+    cy.get('input[data-qa="signup-email"]')
+      .should('be.visible')
+      .clear()
+      .type(email);
+  }
 }
 
-export default loginpage;
+export default LoginPage;
